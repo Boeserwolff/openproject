@@ -9,17 +9,8 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-builders/custom-webpack:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
-            "customWebpackConfig": {
-              "verbose": {
-                "properties": ["entry"]
-              },
-              "path": "./extra-webpack.config.js",
-              "mergeStrategies": {
-                "externals": "replace"
-              }
-            },
             "allowedCommonJsDependencies": [
               "core-app/init-vendors",
               "core-app/init-globals",
@@ -69,7 +60,6 @@
               ]
             },
             "scripts": [],
-            "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
             "sourceMap": true,
