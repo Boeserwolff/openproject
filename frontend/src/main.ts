@@ -28,10 +28,10 @@ __webpack_public_path__ = ASSET_HOST + window.appBasePath + ASSET_BASE_PATH;
 
 window.ErrorReporter = configureErrorReporter();
 
-require('core-app/core/setup/init-vendors');
-require('core-app/core/setup/init-globals');
-require('stimulus/setup');
-require('turbo/setup');
+import 'core-app/core/setup/init-vendors';
+import 'core-app/core/setup/init-globals';
+import './stimulus/setup';
+import './turbo/setup';
 
 if (environment.production) {
   enableProdMode();
