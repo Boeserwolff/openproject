@@ -180,6 +180,6 @@
     "lint": "esprint check",
     "lint:fix": "esprint check --fix",
     "lint:eslint": "eslint",
-    "generate-typings": "tsc -d -p src/tsconfig.app.json"
+    "generate-typings": "tsc -d -p tsconfig.app.json"
   }
 }

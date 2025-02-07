@@ -33,7 +33,7 @@
             "outputPath": "../public/assets/frontend/",
             "index": "src/index2.html",
             "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "tsConfig": "tsconfig.app.json",
             "polyfills": "src/polyfills.ts",
             "assets": [
               "src/assets"
@@ -118,7 +118,7 @@
             "preserveSymlinks": true,
             "main": "src/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "tsConfig": "src/tsconfig.spec.json",
+            "tsConfig": "tsconfig.spec.json",
             "scripts": [],
             "styles": [],
             "stylePreprocessorOptions": {
@@ -135,8 +135,7 @@
             "lintFilePatterns": [
               "src/**/*.ts",
               "src/**/*.html"
-            ],
-            "preserveSymlinks": true
+            ]
           }
         }
       }
