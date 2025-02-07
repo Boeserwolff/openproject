@@ -173,16 +173,17 @@ export class OpCkeditorComponent extends UntilDestroyedMixin implements OnInit, 
 
       return this.getRawData();
     } catch (e) {
-      console.error(`Failed to save CKEditor content: ${e}.`);
+      if (e instanceof Error) {
+        console.error(`Failed to save CKEditor content: ${e}.`);
 
-      const error = this.I18n.t(
-        'js.editor.error_saving_failed',
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
-        { error: e.toString() || this.I18n.t('js.error.internal') },
-      );
+        const error = this.I18n.t(
+          'js.editor.error_saving_failed',
+          { error: e.message },
+        );
 
-      if (notificationOnError) {
-        this.Notifications.addError(error);
+        if (notificationOnError) {
+          this.Notifications.addError(error);
+        }
       }
 
       return this._content;
