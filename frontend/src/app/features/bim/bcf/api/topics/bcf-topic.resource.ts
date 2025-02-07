@@ -27,7 +27,7 @@
 //++
 
 import { jsonArrayMember, jsonMember, jsonObject } from 'typedjson';
-import * as moment from 'moment';
+import moment from 'moment';
 import { Moment } from 'moment';
 
 @jsonObject

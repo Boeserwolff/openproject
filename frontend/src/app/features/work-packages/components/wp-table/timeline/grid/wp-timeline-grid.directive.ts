@@ -30,7 +30,7 @@ import {
   Component,
   ElementRef,
 } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { TimelineZoomLevel } from 'core-app/features/hal/resources/query-resource';
 import { WorkPackageTimelineTableController } from '../container/wp-timeline-container.directive';
 import {

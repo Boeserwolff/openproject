@@ -1,6 +1,6 @@
 import { OpenProjectModule } from 'core-app/app.module';
 import { enableProdMode } from '@angular/core';
-import * as jQuery from 'jquery';
+import jQuery from 'jquery';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { initializeLocale } from 'core-app/core/setup/init-locale';
 import { environment } from './environments/environment';

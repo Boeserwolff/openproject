@@ -26,7 +26,7 @@
 // See COPYRIGHT and LICENSE files for more details.
 //++
 
-import * as moment from 'moment';
+import moment from 'moment';
 import * as i18njs from 'i18n-js';
 
 export function initializeLocale() {

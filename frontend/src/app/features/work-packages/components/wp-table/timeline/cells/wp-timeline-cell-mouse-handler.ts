@@ -27,7 +27,7 @@
 //++
 
 import { Injector } from '@angular/core';
-import * as moment from 'moment';
+import moment from 'moment';
 import { IsolatedQuerySpace } from 'core-app/features/work-packages/directives/query-space/isolated-query-space';
 import { KeyCodes } from 'core-app/shared/helpers/keyCodes.enum';
 import { LoadingIndicatorService } from 'core-app/core/loading-indicator/loading-indicator.service';
