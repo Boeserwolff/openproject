@@ -31,16 +31,16 @@
 // dependencies required by classic (Rails) and Angular application.
 
 // Lodash
-require('expose-loader?_!lodash');
+//require('expose-loader?_!lodash');
 
 // jQuery
-require('expose-loader?jQuery!jquery');
+//require('expose-loader?jQuery!jquery');
 require('jquery-ujs');
 
-require('expose-loader?mousetrap!mousetrap/mousetrap.js');
+//require('expose-loader?mousetrap!mousetrap/mousetrap.js');
 
 // Angular dependencies
-require('expose-loader?dragula!dragula/dist/dragula.min.js');
+//require('expose-loader?dragula!dragula/dist/dragula.min.js');
 require('@uirouter/angular');
 
 // Jquery UI
@@ -50,7 +50,7 @@ require('jquery-ui/ui/widgets/sortable');
 require('jquery-ui/ui/widgets/dialog');
 require('jquery-ui/ui/widgets/tooltip');
 
-require('expose-loader?moment!moment');
+//require('expose-loader?moment!moment');
 require('moment/locale/de');
 require('moment/locale/en-gb');
 
@@ -62,5 +62,5 @@ require('moment-timezone/builds/moment-timezone-with-data.min');
 // eslint-disable-next-line import/extensions,import/no-extraneous-dependencies
 require('@openproject/primer-view-components/app/assets/javascripts/primer_view_components.js');
 
-require('expose-loader?URI!urijs');
+//require('expose-loader?URI!urijs');
 require('urijs/src/URITemplate');
