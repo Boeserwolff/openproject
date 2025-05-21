@@ -124,6 +124,10 @@ class TimeEntry < ApplicationRecord
     end
   end
 
+  def entity_gid
+    entity&.to_gid.to_s
+  end
+
   def hours=(value)
     super(value.is_a?(String) ? (value.to_hours || value) : value)
   end
