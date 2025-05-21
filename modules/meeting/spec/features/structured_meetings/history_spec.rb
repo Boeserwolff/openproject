@@ -97,7 +97,7 @@ RSpec.describe "history",
     history_page.expect_event("Meeting",
                               actor: user.name,
                               timestamp: format_time(meeting.created_at.utc),
-                              action: "created by")
+                              action: "added by")
 
     # Update meeting
     login_as(user)
