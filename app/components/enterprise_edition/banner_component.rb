@@ -114,6 +114,10 @@ module EnterpriseEdition
       @variant == :inline
     end
 
+    def teaser?
+      feature_key == :teaser
+    end
+
     def wrapper_key
       "enterprise_banner_#{feature_key}"
     end
@@ -121,6 +125,7 @@ module EnterpriseEdition
     private
 
     def render?
+      return true if teaser?
       return true if @show_always
 
       !(EnterpriseToken.hide_banners? || feature_available? || dismissed?)
