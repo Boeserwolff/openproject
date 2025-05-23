@@ -764,3 +764,7 @@ class User < Principal
     !User.active.find_by_login("admin").try(:current_password).try(:matches_plaintext?, "admin")
   end
 end
+
+# Fix for development (and non eagerloaded environments), where User.find(...) would not return service accounts before
+# they've been autoloaded.
+require "service_account"
