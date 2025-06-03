@@ -28,24 +28,67 @@
  * ++
  */
 
+import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems, insertOrUpdateBlock } from "@blocknote/core";
 import { BlockNoteView } from "@blocknote/mantine";
-import { useCreateBlockNote } from "@blocknote/react";
+import {
+  DefaultReactSuggestionItem,
+  getDefaultReactSlashMenuItems,
+  SuggestionMenuController,
+  useCreateBlockNote,
+} from "@blocknote/react";
 import { useState } from "react";
+import { OpenProjectWorkPackageBlock } from "./OpenProjectWorkPackageBlock";
+import { FaTasks } from "react-icons/fa";
 
 export default function OpBlockNoteContainer() {
-  const editor = useCreateBlockNote()
   const [editorContent, setEditorContent] = useState("");
+
+  const schema = BlockNoteSchema.create({
+    blockSpecs: {
+      ...defaultBlockSpecs,
+      openProjectWorkPackage: OpenProjectWorkPackageBlock,
+    },
+  });
+  const editor = useCreateBlockNote({
+    schema,
+  });
+
+  const getCustomSlashMenuItems = (editor: any): DefaultReactSuggestionItem[] => {
+    return [
+      ...getDefaultReactSlashMenuItems(editor),
+      {
+          title: "OpenProject Work Package",
+          onItemClick: () => {
+            insertOrUpdateBlock(editor, {
+              // @ts-ignore
+              type: "openProjectWorkPackage",
+            });
+          },
+          aliases: ["openproject", "workpackage", "op", "wp"],
+          icon: FaTasks,
+          subtext: "Add an OpenProject work package block",
+        },
+    ]
+  }
 
   return (
     <>
       <input type="hidden" name="journal[notes]" value={editorContent} />
       <BlockNoteView
         editor={editor}
+        formattingToolbar={false}
         onChange={async (editor) => {
           const content = await editor.blocksToMarkdownLossy();
           setEditorContent(content);
         }}
-      />
+      >
+        <SuggestionMenuController
+          triggerCharacter="/"
+          getItems={
+            async (query: string) => filterSuggestionItems(getCustomSlashMenuItems(editor), query)
+          }
+        />
+      </BlockNoteView>
     </>
   );
 }
