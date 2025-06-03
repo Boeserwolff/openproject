@@ -1,8 +1,48 @@
 import { createReactBlockSpec } from "@blocknote/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-const UI_BLUE = "#000091"; // Default color for task status icons
-const UI_BEIGE = "#FBF5F2";
+export const UI_BLUE = "#000091"; // Default color for task status icons
+export const UI_BEIGE = "#FBF5F2";
+export const UI_GRAY = "#3a3a3a";
+
+export const OPENPROJECT_HOST = "https://openproject.local";
+
+export interface WorkPackage {
+  id: string;
+  subject: string;
+  status?: string | null;
+  assignee?: string | null;
+  href?: string | null;
+  lockVersion?: number | null;
+  _links?: {
+    self: { href: string };
+    status: { title: string; href: string } | null;
+    assignee: { title: string; href: string } | null;
+    type: { title: string; href: string } | null;
+  } | null;
+  _embedded?: {
+    status?: Status | null;
+    type?: {
+      color: string;
+    } | null;
+  } | null;
+}
+
+export interface WorkPackageCollection {
+  _embedded: {
+    elements: WorkPackage[];
+  };
+}
+
+export interface Status {
+  id: string;
+  name: string;
+  isClosed: boolean;
+  color: string;
+  _links: {
+    self: { href: string };
+  };
+}
 
 interface OpenProjectResponse {
   _embedded?: {
@@ -22,39 +62,6 @@ interface BlockProps {
     assignee: string;
     type: string;
     href: string;
-  };
-}
-
-export interface WorkPackage {
-  id: string;
-  subject: string;
-  status?: string | null;
-  assignee?: string | null;
-  href?: string | null;
-  lockVersion?: number | null;
-  _links?: {
-    self: { href: string };
-    status: { title: string; href: string } | null;
-    assignee: { title: string; href: string } | null;
-    type: { title: string; href: string } | null;
-  } | null;
-  _embedded?: {
-    status?: Status | null;
-  } | null;
-}
-
-export interface WorkPackageCollection {
-  _embedded: {
-    elements: WorkPackage[];
-  };
-}
-
-export interface Status {
-  id: string;
-  name: string;
-  isClosed: boolean;
-  _links: {
-    self: { href: string };
   };
 }
 
@@ -380,18 +387,18 @@ const OpenProjectWorkPackageBlockComponent = ({
     }
   };
 
-  return (
-    <div>
-      <div style={{ marginBottom: 12 }}>
-        {/* <button
-          onClick={() => setMode('search')}
-          disabled={mode === 'search'}
-          style={{ marginRight: 8 }}
-        >
-          {t('Search Work Package')}
-        </button> */}
-      </div>
+  const url = `${OPENPROJECT_HOST}/wp/${block.props.wpid}`;
 
+  return (
+    <div
+      style={{
+        padding: "12px 10px",
+        border: "none",
+        borderRadius: "5px",
+        backgroundColor: UI_BEIGE,
+        width: "450px",
+      }}
+    >
       {mode === "search" && (
         <div>
           {!block.props.wpid && (
@@ -426,7 +433,9 @@ const OpenProjectWorkPackageBlockComponent = ({
                     fontSize: "14px",
                   }}
                 />
-                <button onClick={() => setMode("create")}>{"New Work Package"}</button>
+                {/* <button onClick={() => setMode('create')}>
+                  {t('New Work Package')}
+                </button> */}
               </div>
 
               {/* Autocomplete dropdown */}
@@ -484,27 +493,13 @@ const OpenProjectWorkPackageBlockComponent = ({
             </div>
           )}
           {block.props.wpid && !selectedWorkPackage && (
-            <div
-              style={{
-                padding: "4px 8px",
-                border: "none",
-                borderRadius: "5px",
-                backgroundColor: UI_BEIGE,
-              }}
-            >
-              loading... #{block.props.wpid}
+            <div>
+              #{block.props.wpid} {block.props.subject}
             </div>
           )}
           {/* Display selected work package details */}
           {selectedWorkPackage && (
-            <div
-              style={{
-                padding: "4px 8px",
-                border: "none",
-                borderRadius: "5px",
-                backgroundColor: UI_BEIGE,
-              }}
-            >
+            <div>
               <div
                 style={{
                   display: "flex",
@@ -513,15 +508,32 @@ const OpenProjectWorkPackageBlockComponent = ({
               >
                 <div
                   style={{
-                    border: "none",
-                    borderRadius: "5px",
-                    backgroundColor: UI_BEIGE,
+                    gap: "8px",
+                    color: selectedWorkPackage._embedded?.type?.color || UI_BLUE,
+                    fontWeight: "bold",
+                    textTransform: "uppercase",
                   }}
                 >
                   {selectedWorkPackage._links?.type?.title}
                 </div>
-                <div>#{selectedWorkPackage.id}</div>
-                <div>{selectedWorkPackage._links?.status?.title}</div>
+                <div
+                  style={{
+                    color: "#666",
+                  }}
+                >
+                  #{selectedWorkPackage.id}
+                </div>
+                <div
+                  style={{
+                    fontSize: "0.8rem",
+                    borderRadius: "12px",
+                    padding: "2px 8px",
+                    border: "1px solid #ccc",
+                    backgroundColor: selectedWorkPackage._embedded?.status?.color || UI_BLUE,
+                  }}
+                >
+                  {selectedWorkPackage._links?.status?.title}
+                </div>
                 {/* <p>
                 {t('Assignee')}: {selectedWorkPackage._links?.assignee?.title}
               </p> */}
@@ -529,15 +541,22 @@ const OpenProjectWorkPackageBlockComponent = ({
 
               <div>
                 <a
-                  href={selectedWorkPackage._links?.self?.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={url}
                   style={{
                     marginRight: 6,
                     textDecoration: "none",
                     color: UI_BLUE,
                     cursor: "pointer",
                   }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(url, "_blank");
+                  }}
+                  // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+                  onMouseOver={(e) => (e.currentTarget.style.textDecoration = "underline")}
+                  // eslint-disable-next-line jsx-a11y/mouse-events-have-key-events
+                  onMouseOut={(e) => (e.currentTarget.style.textDecoration = "none")}
                 >
                   {selectedWorkPackage.subject}
                 </a>
