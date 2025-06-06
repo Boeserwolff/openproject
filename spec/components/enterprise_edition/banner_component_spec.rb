@@ -295,4 +295,22 @@ RSpec.describe EnterpriseEdition::BannerComponent, type: :component do
       end
     end
   end
+
+  context "with a :teaser key" do
+    let(:subscription_double) { instance_double(Subscription, trial_days_left: 42, enterprise_plan: :mocked) }
+
+    before do
+      allow(Subscription).to receive(:current).and_return(subscription_double)
+    end
+
+    it "renders the teaser version" do
+      render_inline(described_class.new(:teaser, **component_args))
+
+      component = find_test_selector(component_test_selector)
+
+      expect(component).to have_content("42 days left of mocked trial token")
+      expect(component).to have_content("You have access to all Mocked enterprise plan features.")
+      expect(component).to have_content("Buy now")
+    end
+  end
 end
