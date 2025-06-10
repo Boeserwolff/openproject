@@ -27,24 +27,40 @@
 #
 # See COPYRIGHT and LICENSE files for more details.
 #++
-RSpec.shared_context "with rendered form" do
+#
+require "spec_helper"
+
+RSpec.describe Primer::OpenProject::Forms::Dsl, type: :forms do
   include ViewComponent::TestHelpers
 
-  let(:form_class) { described_class }
-
-  def build_form(f)
-    described_class.new(f)
-  end
-
-  def render_form
-    render_in_view_context(model, self) do |model, spec_context|
-      primer_form_with(url: "/foo", model:) do |f|
-        render(spec_context.build_form(f))
-      end
+  class DslTestForm < ApplicationForm
+    form do |f|
+      f.text_field(name: :first_name, label: "First name")
+      f.text_field(name: :last_name, label: "Last name")
     end
   end
 
-  before do
-    render_form
+  let(:model) { build_stubbed(:project) }
+
+  xit "should foo" do
+    builder = Primer::Forms::Builder.new(:project, model, nil, {})
+    builder.set_instance_variable(:@controller, vc_test_controller)
+    form = DslTestForm.new(builder)
+    p form.inputs.size
+  end
+
+
+  xit "should do" do
+    form = nil
+    render_in_view_context(model) do |model|
+      primer_form_with(model: model, url: "/foo") do |f|
+        p f
+        form = DslTestForm.new(f)
+        form.instance_variable_set(:@view_context, self)
+      end
+    end
+
+    expect(form.inputs.size).to eq 2
+    expect(form.inputs[0].inputs[0].label).to eq 2
   end
 end
