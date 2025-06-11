@@ -30,15 +30,10 @@
 
 import { BlockNoteSchema, defaultBlockSpecs, filterSuggestionItems, insertOrUpdateBlock } from "@blocknote/core";
 import { BlockNoteView } from "@blocknote/mantine";
-import {
-  DefaultReactSuggestionItem,
-  getDefaultReactSlashMenuItems,
-  SuggestionMenuController,
-  useCreateBlockNote,
-} from "@blocknote/react";
+import { getDefaultReactSlashMenuItems, SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
+import { dummyBlockSpec } from "op-blocknote-extensions";
 import { useState } from "react";
 import { OpenProjectWorkPackageBlock } from "./OpenProjectWorkPackageBlock";
-import { FaTasks } from "react-icons/fa";
 
 export default function OpBlockNoteContainer() {
   const [editorContent, setEditorContent] = useState("");
@@ -47,36 +42,34 @@ export default function OpBlockNoteContainer() {
     blockSpecs: {
       ...defaultBlockSpecs,
       openProjectWorkPackage: OpenProjectWorkPackageBlock,
+      dummy: dummyBlockSpec,
     },
   });
-  const editor = useCreateBlockNote({
-    schema,
-  });
+  const editor = useCreateBlockNote({ schema });
+  type EditorType = typeof editor;
 
-  const getCustomSlashMenuItems = (editor: any): DefaultReactSuggestionItem[] => {
+  const getCustomSlashMenuItems = (editor: EditorType) => {
     return [
       ...getDefaultReactSlashMenuItems(editor),
       {
-          title: "OpenProject Work Package",
-          onItemClick: () => {
-            insertOrUpdateBlock(editor, {
-              // @ts-ignore
-              type: "openProjectWorkPackage",
-            });
-          },
-          aliases: ["openproject", "workpackage", "op", "wp"],
-          icon: FaTasks,
-          subtext: "Add an OpenProject work package block",
-        },
-    ]
-  }
+        title: "Insert Dummy Block",
+        onItemClick: () =>
+          insertOrUpdateBlock(editor, {
+            type: "dummy",
+          }),
+        aliases: ["dummy"],
+        group: "Other",
+        icon: <span>🧩</span>,
+        subtext: "Used to insert a Dummy block",
+      },
+    ];
+  };
 
   return (
     <>
       <input type="hidden" name="journal[notes]" value={editorContent} />
       <BlockNoteView
         editor={editor}
-        formattingToolbar={false}
         onChange={async (editor) => {
           const content = await editor.blocksToMarkdownLossy();
           setEditorContent(content);
@@ -84,9 +77,7 @@ export default function OpBlockNoteContainer() {
       >
         <SuggestionMenuController
           triggerCharacter="/"
-          getItems={
-            async (query: string) => filterSuggestionItems(getCustomSlashMenuItems(editor), query)
-          }
+          getItems={async (query: string) => filterSuggestionItems(getCustomSlashMenuItems(editor), query)}
         />
       </BlockNoteView>
     </>
